@@ -1,6 +1,7 @@
 import "./App.css";
 import data from "./data";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import HomeScreen from "./screens/HomeScreen";
 
 function App() {
   return (
@@ -10,6 +11,9 @@ function App() {
           <a href='/'>Caroline Dambrosio Designs</a>
         </header>
         <main>
+          <Routes>
+            <Route path='/' element={<HomeScreen />} />
+          </Routes>
           <h1>Featured Products</h1>
           <div className='products'>
             {data.products.map((product) => (
