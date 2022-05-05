@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useEffect, useReducer } from 'react';
 import { useParams } from 'react-router-dom';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const reducer = (state, action) => {
   switch (action.type) {
@@ -44,7 +46,17 @@ function ProductScreen() {
     <div>{error}</div>
   ) : (
     <div>
-      <h1>{product.name}</h1>
+      <Row>
+        <Col md={6}>
+          <img
+            className='img-large'
+            src={product.image}
+            alt={product.name}
+          ></img>
+        </Col>
+        <Col md={3}></Col>
+        <Col md={3}></Col>
+      </Row>
     </div>
   );
 }
