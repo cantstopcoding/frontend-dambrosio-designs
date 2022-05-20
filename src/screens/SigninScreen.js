@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -8,6 +8,7 @@ import { useContext, useState } from 'react';
 import { Store } from '../Store';
 
 export default function SigninScreen() {
+  const navigate = useNavigate();
   const { search } = useLocation();
   const redirectInUrl = new URLSearchParams(search).get('redirect');
   const redirect = redirectInUrl ? redirectInUrl : '/';
@@ -25,8 +26,11 @@ export default function SigninScreen() {
         password,
       });
       ctxDispatch({ type: 'USER_SIGNIN', payload: data });
-      console.log(data);
-    } catch (err) {}
+      localStorage.setItem('userInfo', JSON.stringify(data));
+      navigate(redirect || '/');
+    } catch (err) {
+      alert('Invalid email or password');
+    }
   };
 
   return (
