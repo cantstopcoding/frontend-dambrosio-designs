@@ -7,6 +7,7 @@ import { Helmet } from 'react-helmet-async';
 import { useContext, useEffect, useState } from 'react';
 import { Store } from '../Store';
 import { toast } from 'react-toastify';
+import { getError } from '../utils';
 
 export default function SigninScreen() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ export default function SigninScreen() {
       localStorage.setItem('userInfo', JSON.stringify(data));
       navigate(redirect || '/');
     } catch (err) {
-      toast.error('Invalid email or password');
+      toast.error(getError(err));
     }
   };
 
