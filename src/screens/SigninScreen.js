@@ -4,7 +4,7 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { Helmet } from 'react-helmet-async';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Store } from '../Store';
 
 export default function SigninScreen() {
@@ -17,7 +17,7 @@ export default function SigninScreen() {
   const [password, setPassword] = useState('');
 
   const { state, dispatch: ctxDispatch } = useContext(Store);
-
+  const { userInfo } = state;
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -32,6 +32,12 @@ export default function SigninScreen() {
       alert('Invalid email or password');
     }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate(redirect);
+    }
+  }, [navigate, redirect, userInfo]);
 
   return (
     <Container className='small-container'>
