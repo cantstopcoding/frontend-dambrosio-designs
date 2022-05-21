@@ -24,8 +24,13 @@ export default function SignupScreen() {
   const { userInfo } = state;
   const submitHandler = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      toast.error('Passwords do not match');
+      return;
+    }
     try {
       const { data } = await Axios.post('/api/users/signup', {
+        name,
         email,
         password,
       });
@@ -77,7 +82,7 @@ export default function SignupScreen() {
           <Form.Control
             type='password'
             required
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
         <div className='mb-3'>
