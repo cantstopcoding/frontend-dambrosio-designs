@@ -12,6 +12,7 @@ import LoadingBox from '../components/LoadingBox';
 import MessageBox from '../components/MessageBox';
 import { Store } from '../Store';
 import { getError } from '../utils';
+import { toast } from 'react-toastify';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -41,6 +42,40 @@ export default function OrderScreen() {
   });
 
   const [{ isPending }, paypalDispatch] = usePaypalScriptReducer();
+
+  function createOrder(data, actions) {
+    return actions.order
+      .create({
+        purchase_units: [
+          {
+            amount: { value: order.totalPrice },
+          },
+        ],
+      })
+      .then((orderID) => {
+        return orderID;
+      });
+  }
+
+  function onApprove(data, actions) {
+    return actions.order.capture().then(async function (details) {
+      try {
+        dispatch({ type: 'PAY_REQUEST' });
+        const { data } = axios.put(`/api/orders/${order._id}/pay`, details, {
+          headers: { authorization: `Bearer ${userInfo.token}` },
+        });
+        dispatch({ type: 'PAY_SUCCESS', payload: data });
+        toast.success('Order is paid');
+      } catch (err) {
+        dispatch({ type: 'PAY_FAIL', payload: err.message });
+        toast.error(getError(err));
+      }
+    });
+  }
+
+  function onError(err) {
+    toast.error(getError(err));
+  }
 
   useEffect(() => {
     const fetchOrder = async () => {
@@ -181,24 +216,22 @@ export default function OrderScreen() {
                       <strong>${order.totalPrice.toFixed(2)}</strong>
                     </Col>
                   </Row>
-                    </ListGroup.Item>
-                    {!order.isPaid && (
-                      <ListGroup.Item>
-                        {isPending ? (
-                          <LoadingBox />
-                        ) :
-                          (
-                            <div>
-                              <PayPalButtons
-                                createOrder={createOrder}
-                                onApprove={onApprove}
-                                onError={onError}
-                              ></PayPalButtons>
-
-                          </div>  
-                        )}
-                    </ListGroup.Item>
+                </ListGroup.Item>
+                {!order.isPaid && (
+                  <ListGroup.Item>
+                    {isPending ? (
+                      <LoadingBox />
+                    ) : (
+                      <div>
+                        <PayPalButtons
+                          createOrder={createOrder}
+                          onApprove={onApprove}
+                          onError={onError}
+                        ></PayPalButtons>
+                      </div>
                     )}
+                  </ListGroup.Item>
+                )}
               </ListGroup>
             </Card.Body>
           </Card>
