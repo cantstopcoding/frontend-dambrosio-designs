@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useReducer } from 'react';
-import { PayPalButtons, usePaypalScriptReducer } from '@paypal/react-paypal-js';
+import { PayPalButtons, usePayPalScriptReducer } from '@paypal/react-paypal-js';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate, useParams } from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
@@ -52,7 +52,7 @@ export default function OrderScreen() {
       loadingPay: false,
     });
 
-  const [{ isPending }, paypalDispatch] = usePaypalScriptReducer();
+  const [{ isPending }, paypalDispatch] = usePayPalScriptReducer();
 
   function createOrder(data, actions) {
     return actions.order
