@@ -27,7 +27,7 @@ function reducer(state, action) {
     case 'PAY_SUCCESS':
       return { ...state, loadingPay: false, successPay: true };
     case 'PAY_FAIL':
-      return { ...state, loadingPay: false, errorPay: action.payload };
+      return { ...state, loadingPay: false };
     case 'PAY_RESET':
       return { ...state, loadingPay: false, successPay: false };
 
@@ -72,18 +72,21 @@ export default function OrderScreen() {
     return actions.order.capture().then(async function (details) {
       try {
         dispatch({ type: 'PAY_REQUEST' });
-        const { data } = axios.put(`/api/orders/${order._id}/pay`, details, {
-          headers: { authorization: `Bearer ${userInfo.token}` },
-        });
+        const { data } = await axios.put(
+          `/api/orders/${order._id}/pay`,
+          details,
+          {
+            headers: { authorization: `Bearer ${userInfo.token}` },
+          }
+        );
         dispatch({ type: 'PAY_SUCCESS', payload: data });
         toast.success('Order is paid');
       } catch (err) {
-        dispatch({ type: 'PAY_FAIL', payload: err.message });
+        dispatch({ type: 'PAY_FAIL', payload: getError(err) });
         toast.error(getError(err));
       }
     });
   }
-
   function onError(err) {
     toast.error(getError(err));
   }
@@ -115,7 +118,7 @@ export default function OrderScreen() {
           headers: { authorization: `Bearer ${userInfo.token}` },
         });
         paypalDispatch({
-          type: 'resetOptinos',
+          type: 'resetOptions',
           value: {
             'client-id': clientId,
             currency: 'USD',
