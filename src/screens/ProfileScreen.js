@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Form } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { Store } from '../Store';
 
@@ -8,6 +8,8 @@ export default function ProfileScreen() {
   const { userInfo } = state;
   const [name, setName] = useState(userInfo.name);
   const [email, setEmail] = useState(userInfo.email);
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const submitHandler = async (e) => {};
 
@@ -25,6 +27,32 @@ export default function ProfileScreen() {
             required
           />
         </Form.Group>
+        <Form.Group className='mb-3' controlId='name'>
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className='mb-3' controlId='password'>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type='password'
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group className='mb-3' controlId='password'>
+          <Form.Label>Confirm Password</Form.Label>
+          <Form.Control
+            type='password'
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </Form.Group>
+        <div className='mb-3'>
+          <Button type='submit'></Button>
+        </div>
       </form>
     </div>
   );
